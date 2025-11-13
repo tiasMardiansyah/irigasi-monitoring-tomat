@@ -1,0 +1,25 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+# Gunakan custom page untuk error 403
+ErrorDocument 403 /megacomputer_be/403.html
+
+# Gunakan custom page untuk error 404
+ErrorDocument 404 /megacomputer_be/404.html
+
+# Blok seluruh isi application, system, vendor, dan folder lain
+RewriteRule ^(application|assets|system|vendor|storage|tests|logs)(/.*)?$ - [F,L]
+
+# Blok file rahasia (.env, .git, composer, htaccess, dsb.)
+RewriteRule ^(\.env|\.git|\.gitignore|composer\.json|composer\.lock|\.htaccess)$ - [F,L]
+
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(avifs?|bmp|cur|gif|ico|jpe?g|jxl|a?png|svgz?|webp)$">
+            SetEnvIf Origin ":" IS_CORS
+            Header set Access-Control-Allow-Origin "*" env=IS_CORS
+        </FilesMatch>
+    </IfModule>
+</IfModule>
